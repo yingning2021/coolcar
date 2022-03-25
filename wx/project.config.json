@@ -5,7 +5,7 @@
     },
     "miniprogramRoot": "miniprogram/",
     "compileType": "miniprogram",
-    "projectname": "coolcar",
+    "projectname": "wx",
     "setting": {
         "urlCheck": true,
         "es6": true,

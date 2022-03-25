@@ -14,7 +14,7 @@ Page({
   // 事件处理函数
   bindViewTap() {
     wx.navigateTo({
-      url: 123,
+      url: "/pages/logs/logs",
     })
   },
   onLoad() {
