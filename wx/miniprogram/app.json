@@ -1,8 +1,13 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/logs/logs"
+    "pages/register/register"
   ],
+  "permission": {
+    "scope.userLocation": {
+      "desc": "您的位置信息将用于驾驶位置展示"
+    }
+  },
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",

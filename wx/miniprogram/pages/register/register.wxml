@@ -1,0 +1,36 @@
+<view class="container">
+    <view class="lic-tmpl" wx:if="{{!hasLicImg}}" bind:tap="onUploadLic">
+        <image class="lic-tmpl-img stretch" src="/resources/lic.png"></image>
+        <view class="cuIcon-camerafill lg text-gray"></view>
+        <view class="instruction">请上传驾驶证照片</view>
+    </view>
+    <block wx:else>
+        <view class="lic-tmpl ">
+            <image class="stretch" src="{{licIMgURL}}"></image>
+        </view>
+
+        <view class="lic-form margin-top-lg">
+            <view class="cu-form-group">
+                <view class="title">驾驶证号</view>
+                <input placeholder="驾驶证号"></input>
+            </view>
+
+            <view class="cu-form-group">
+                <view class="title">姓名</view>
+                <input placeholder="姓名"></input>
+            </view>
+
+            <view class="cu-form-group">
+                <view class="title">性别</view>
+                <picker bind:change="onGenderChange" range="{{genders}}" value="{{genderIndex}}">
+                    <view class="picker">
+                        {{genders[genderIndex]}}
+                    </view>
+                </picker>
+            </view>
+
+
+            
+        </view>
+    </block>
+</view>
