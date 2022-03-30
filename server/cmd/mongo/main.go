@@ -16,6 +16,7 @@ func main() {
 		panic(err)
 	}
 	col := mc.Database("coolcar").Collection("account")
+	//insertRows(c, col)
 	findRows(c, col)
 }
 
