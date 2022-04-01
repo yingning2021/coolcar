@@ -14,6 +14,13 @@ func Set(v interface{}) bson.M {
 	}
 }
 
+// Set returns a $set update document
+func SetOnInsert(v interface{}) bson.M {
+	return bson.M{
+		"$setOnInsert": v,
+	}
+}
+
 // ObjID define
 type ObjID struct {
 	ID primitive.ObjectID `bson:"_id"`

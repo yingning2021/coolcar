@@ -46,7 +46,9 @@ func RunWithMongoInDocker(m *testing.M, mongoURI *string) int {
 		err = c.ContainerRemove(ctx, containerId, types.ContainerRemoveOptions{
 			Force: true,
 		})
-		panic(err)
+		if err != nil {
+			panic(err)
+		}
 	}()
 
 	err = c.ContainerStart(ctx, containerId, types.ContainerStartOptions{})
