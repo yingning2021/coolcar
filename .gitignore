@@ -3,3 +3,4 @@ wx/miniprogram/**/*.js
 .vscode/
 
 wx/node_modules/
+/server/auth/private.key
