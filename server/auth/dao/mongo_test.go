@@ -7,9 +7,11 @@ import (
 	"testing"
 )
 
+var mongoURI string
+
 func TestResolveAccountId(t *testing.T) {
 	c := context.Background()
-	mc, err := mongo.Connect(c, options.Client().ApplyURI("mongodb://localhost:27017/coolcar?readPreference=primary&ssl=false"))
+	mc, err := mongo.Connect(c, options.Client().ApplyURI(mongoURI))
 	if err != nil {
 		t.Fatalf("cannot connect mongodb: %v", err)
 	}
@@ -23,4 +25,8 @@ func TestResolveAccountId(t *testing.T) {
 			t.Errorf("resolve account id : want: %q, got : %q", want, id)
 		}
 	}
+}
+
+func TestMain(m *testing.M) {
+
 }
