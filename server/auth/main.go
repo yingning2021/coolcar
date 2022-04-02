@@ -20,7 +20,7 @@ import (
 )
 
 func main() {
-	logger, err := zap.NewDevelopment()
+	logger, err := newZapLogger()
 	if err != nil {
 		log.Fatalf("cannot create logger: %v", err)
 	}
@@ -64,4 +64,10 @@ func main() {
 
 	err = s.Serve(lis)
 	logger.Fatal("cannot server", zap.Error(err))
+}
+
+func newZapLogger() (*zap.Logger, error) {
+	cfg := zap.NewDevelopmentConfig()
+	cfg.EncoderConfig.TimeKey = ""
+	return cfg.Build()
 }
