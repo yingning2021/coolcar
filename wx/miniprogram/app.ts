@@ -18,7 +18,9 @@ App<IAppOption>({
           data: {
             code: res.code
           },
-          success: console.info,
+          success: (res) => {
+            console.log(res.data.access_token)
+          },
           fail: console.error
         })
       },
