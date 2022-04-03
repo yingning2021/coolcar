@@ -2,8 +2,10 @@ package dao
 
 import (
 	"context"
+	"coolcar/shared/id"
 	mgo "coolcar/shared/mongo"
 	mgutil "coolcar/shared/mongo"
+	"coolcar/shared/mongo/objid"
 	mongotesting "coolcar/shared/mongo/testing"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -24,11 +26,11 @@ func TestResolveAccountId(t *testing.T) {
 	m := NewMongo(mc.Database("coolcar"))
 	_, err = m.col.InsertMany(c, []interface{}{
 		bson.M{
-			mgo.IDFieldName: mustObjID("624472e4cd6bedc622aa45d4"),
+			mgo.IDFieldName: objid.MustObjID(id.AccountID("624472e4cd6bedc622aa45d4")),
 			openIDField:     "openid_1",
 		},
 		bson.M{
-			mgo.IDFieldName: mustObjID("624472e4cd6bedc622aa4570"),
+			mgo.IDFieldName: objid.MustObjID(id.AccountID("624472e4cd6bedc622aa4570")),
 			openIDField:     "openid_2",
 		},
 	})
@@ -37,7 +39,7 @@ func TestResolveAccountId(t *testing.T) {
 	}
 
 	mgutil.NewObjectID = func() primitive.ObjectID {
-		objID := mustObjID("624472e4cd6bedc622aa4571")
+		objID := objid.MustObjID(id.AccountID("624472e4cd6bedc622aa4571"))
 		return objID
 	}
 
@@ -69,19 +71,11 @@ func TestResolveAccountId(t *testing.T) {
 				t.Errorf("faild resolve account id for: %q : %v", cc.openID, err)
 			}
 
-			if id != cc.want {
+			if id.String() != cc.want {
 				t.Errorf("resolve account id : want: %q, got : %q", cc.want, id)
 			}
 		})
 	}
-}
-
-func mustObjID(hex string) primitive.ObjectID {
-	objId, err := primitive.ObjectIDFromHex(hex)
-	if err != nil {
-		panic(err)
-	}
-	return objId
 }
 
 func TestMain(m *testing.M) {
