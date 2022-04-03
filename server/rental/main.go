@@ -2,7 +2,7 @@ package main
 
 import (
 	rentalpb "coolcar/rental/api/gen/v1"
-	"coolcar/rental/api/trip"
+	"coolcar/rental/trip"
 	"coolcar/shared/server"
 	"google.golang.org/grpc"
 	"log"
