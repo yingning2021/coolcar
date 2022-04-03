@@ -23,7 +23,7 @@ func TestCreateTrip(t *testing.T) {
 	}
 
 	m := NewMongo(mc.Database("coolcar"))
-	acct := id.AccountID("account1")
+	acct := id.AccountID("account2")
 
 	tr, err := m.CreateTrip(c, &rentalpb.Trip{
 		AccountId: acct.String(),
@@ -44,10 +44,10 @@ func TestCreateTrip(t *testing.T) {
 				Longitude: 115,
 			},
 		},
-		Status: rentalpb.TripStatus_FINISHED,
+		Status: rentalpb.TripStatus_IN_PROGRESS,
 	})
 	if err != nil {
-		t.Errorf("cannot create trip: %v", err)
+		t.Fatalf("cannot create trip: %v", err)
 	}
 	t.Errorf("%+v", tr.ID)
 	got, err := m.GetTrip(c, objid.ToTripID(tr.ID), acct)
