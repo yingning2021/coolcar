@@ -25,7 +25,7 @@ func NewMongo(db *mongo.Database) *Mongo {
 
 // ResolveAccountID resolves an account id from open id
 func (m *Mongo) ResolveAccountID(c context.Context, openID string) (id.AccountID, error) {
-	insertedID := mgutil.NewObjectID()
+	insertedID := mgutil.NewObjID()
 	res := m.col.FindOneAndUpdate(c, bson.M{
 		openIDField: openID,
 	}, mgutil.SetOnInsert(bson.M{

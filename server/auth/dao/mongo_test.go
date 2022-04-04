@@ -8,9 +8,6 @@ import (
 	"coolcar/shared/mongo/objid"
 	mongotesting "coolcar/shared/mongo/testing"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 	"os"
 	"testing"
 )
@@ -19,7 +16,7 @@ var mongoURI string
 
 func TestResolveAccountId(t *testing.T) {
 	c := context.Background()
-	mc, err := mongo.Connect(c, options.Client().ApplyURI(mongoURI))
+	mc, err := mongotesting.NewClient(c)
 	if err != nil {
 		t.Fatalf("cannot connect mongodb: %v", err)
 	}
@@ -38,10 +35,7 @@ func TestResolveAccountId(t *testing.T) {
 		t.Fatalf("cannot insert initial values:  %v", err)
 	}
 
-	mgutil.NewObjectID = func() primitive.ObjectID {
-		objID := objid.MustObjID(id.AccountID("624472e4cd6bedc622aa4571"))
-		return objID
-	}
+	mgutil.NewObjIDWithValue(id.AccountID("624472e4cd6bedc622aa4571"))
 
 	cases := []struct {
 		name   string
@@ -66,18 +60,18 @@ func TestResolveAccountId(t *testing.T) {
 	}
 	for _, cc := range cases {
 		t.Run(cc.name, func(t *testing.T) {
-			id, err := m.ResolveAccountID(context.Background(), cc.openID)
+			aid, err := m.ResolveAccountID(context.Background(), cc.openID)
 			if err != nil {
 				t.Errorf("faild resolve account id for: %q : %v", cc.openID, err)
 			}
 
-			if id.String() != cc.want {
-				t.Errorf("resolve account id : want: %q, got : %q", cc.want, id)
+			if aid.String() != cc.want {
+				t.Errorf("resolve account id : want: %q, got : %q", cc.want, aid)
 			}
 		})
 	}
 }
 
 func TestMain(m *testing.M) {
-	os.Exit(mongotesting.RunWithMongoInDocker(m, &mongoURI))
+	os.Exit(mongotesting.RunWithMongoInDocker(m))
 }

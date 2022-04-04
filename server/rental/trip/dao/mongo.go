@@ -15,6 +15,7 @@ import (
 const (
 	tripField      = "trip"
 	accountIDField = tripField + ".accountid"
+	statusField    = tripField + ".status"
 )
 
 type Mongo struct {
@@ -38,7 +39,7 @@ func (m *Mongo) CreateTrip(c context.Context, trip *rentalpb.Trip) (*TripRecord,
 	r := &TripRecord{
 		Trip: trip,
 	}
-	r.ID = mgutil.NewObjectID()
+	r.ID = mgutil.NewObjID()
 	r.UpdatedAt = mgutil.UpdatedAt()
 
 	_, err := m.col.InsertOne(c, r)
@@ -67,4 +68,56 @@ func (m *Mongo) GetTrip(c context.Context, id id.TripID, accountID id.AccountID)
 		return nil, fmt.Errorf("cannot decode: %v", err)
 	}
 	return &tr, nil
+}
+
+// GetTrips gets trips for the account by status
+// if status is not specified, gets all trips for the account.
+func (m *Mongo) GetTrips(c context.Context, accountID id.AccountID, status rentalpb.TripStatus) ([]*TripRecord, error) {
+	filter := bson.M{
+		accountIDField: accountID.String(),
+	}
+	if status != rentalpb.TripStatus_TS_NOT_SPECIFIED {
+		filter[statusField] = status
+	}
+	res, err := m.col.Find(c, filter)
+	if err != nil {
+		return nil, err
+	}
+
+	var trips []*TripRecord
+	for res.Next(c) {
+		var trip TripRecord
+		err := res.Decode(&trip)
+		if err != nil {
+			// 一行解析出现了问题，应不应该直接返回呢
+			return nil, err
+		}
+		trips = append(trips, &trip)
+	}
+	return trips, nil
+}
+
+// UpdateTrip updates a trip
+func (m *Mongo) UpdateTrip(c context.Context, tid id.TripID, aid id.AccountID, updatedAt int64, trip *rentalpb.Trip) error {
+	objID, err := objid.FromID(tid)
+	if err != nil {
+		return fmt.Errorf("invalid id: %v", err)
+	}
+
+	newUpdatedAt := mgutil.UpdatedAt()
+	res, err := m.col.UpdateOne(c, bson.M{
+		mgutil.IDFieldName:        objID,
+		accountIDField:            aid.String(),
+		mgutil.UpdatedAtFieldName: updatedAt,
+	}, mgutil.Set(bson.M{
+		tripField:                 trip,
+		mgutil.UpdatedAtFieldName: newUpdatedAt,
+	}))
+	if err != nil {
+		return err
+	}
+	if res.MatchedCount == 0 {
+		return mongo.ErrNoDocuments
+	}
+	return nil
 }
