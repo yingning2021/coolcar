@@ -62,7 +62,7 @@ message UpdateTripRequest {
 }
 
 service TripService {
-  rpc CreateTrip (CreateTripRequest) returns (Trip);
+  rpc CreateTrip (CreateTripRequest) returns (TripEntity);
   rpc GetTrip (GetTripRequest) returns (Trip);
   rpc GetTrips (GetTripsRequest) returns (GetTripRequest);
   rpc UpdateTrip (UpdateTripRequest) returns (Trip);
