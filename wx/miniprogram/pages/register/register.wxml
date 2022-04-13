@@ -29,8 +29,15 @@
                 </picker>
             </view>
 
+            <view class="cu-form-group">
+                <view class="title">出生日期</view>
+                <picker mode="date" value="{{birthDate}}" bindchange="onBirthDateChange" >
+                    <view class="picker">
+                        {{birthDate}}
+                    </view>
+                </picker>
+            </view>
 
-            
         </view>
     </block>
 </view>

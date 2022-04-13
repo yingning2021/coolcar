@@ -1,6 +1,7 @@
 wx/miniprogram/**/*.js
 .idea/
 .vscode/
+*/.DS_Store
 
 wx/node_modules/
 /server/auth/private.key
